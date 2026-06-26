@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KONCRIT — Мастер настройки</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-accent: #002fa7;
+    --blue-bright: #0055ff;
+    --text-dark: #121239;
+    --text-muted: #5a5a7a;
+    --text-light: #9898b0;
+    --border: rgba(18,18,57,0.12);
+    --border-hover: rgba(0,47,167,0.25);
+    --bg-card: rgba(255,255,255,0.82);
+    --bg-surface: rgba(255,255,255,0.55);
+    --success: #00875a;
+    --warning: #b45309;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-dark);
+    min-height: 100vh;
+    background-color: #d8d8d0;
+    background-image:
+      radial-gradient(ellipse at 20% 30%, rgba(180,178,169,0.6) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(150,148,140,0.4) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+    background-size: cover, cover, 400px 400px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle 1.5px at 12% 8%, rgba(18,18,57,0.18) 0%, transparent 100%),
+      radial-gradient(circle 1px at 35% 22%, rgba(18,18,57,0.12) 0%, transparent 100%),
+      radial-gradient(circle 2px at 58% 5%, rgba(18,18,57,0.15) 0%, transparent 100%),
+      radial-gradient(circle 1px at 78% 18%, rgba(18,18,57,0.10) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 90% 35%, rgba(18,18,57,0.14) 0%, transparent 100%),
+      radial-gradient(circle 1px at 5% 45%, rgba(18,18,57,0.12) 0%, transparent 100%),
+      radial-gradient(circle 2px at 25% 60%, rgba(18,18,57,0.16) 0%, transparent 100%),
+      radial-gradient(circle 1px at 47% 75%, rgba(18,18,57,0.10) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 68% 88%, rgba(18,18,57,0.13) 0%, transparent 100%),
+      radial-gradient(circle 1px at 85% 95%, rgba(18,18,57,0.09) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+  }
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+  }
+  .logo-text {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--text-dark);
+  }
+  .logo-sep {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+  .logo-sub {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .koncrit-yms-logo {
+    width: 270px;
+    height: auto;
+    display: block;
+  }
+  .koncrit-logo-img {
+    display: block;
+    width: 240px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .badge-project {
+    background: rgba(0,47,167,0.08);
+    border: 1px solid rgba(0,47,167,0.18);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue-accent);
+    letter-spacing: 0.03em;
+  }
+
+  /* PROGRESS */
+  .progress-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 28px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(12px);
+  }
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    flex: 1;
+    position: relative;
+  }
+  .step-item:not(:last-child)::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 8px;
+    transition: background 0.3s;
+  }
+  .step-item.completed:not(:last-child)::after {
+    background: var(--blue-accent);
+  }
+  .step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: white;
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .step-item.active .step-dot {
+    background: var(--blue-accent);
+    border-color: var(--blue-accent);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(0,47,167,0.15);
+  }
+  .step-item.completed .step-dot {
+    background: var(--blue-accent);
+    border-color: var(--blue-accent);
+    color: white;
+  }
+  .step-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: normal;
+    line-height: 1.25;
+    transition: color 0.25s;
+  }
+  .step-item.active .step-label { color: var(--blue-accent); }
+  .step-item.completed .step-label { color: var(--text-dark); }
+
+  .progress-bar-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-accent), var(--blue-bright));
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* MAIN LAYOUT */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 24px;
+  }
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 2px;
+  }
+  .checklist-item:hover { background: rgba(0,47,167,0.05); }
+  .checklist-item.active { background: rgba(0,47,167,0.08); }
+  .chk-box {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: white;
+  }
+  .checklist-item.done .chk-box {
+    background: var(--success);
+    border-color: var(--success);
+  }
+  .chk-tick {
+    width: 10px;
+    height: 10px;
+    display: none;
+  }
+  .checklist-item.done .chk-tick { display: block; }
+  .chk-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+    flex: 1;
+  }
+  .checklist-item.done .chk-label {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+  .readiness-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .readiness-score {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--blue-accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .readiness-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .readiness-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-accent), var(--blue-bright));
+    border-radius: 3px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* CONTENT PANEL */
+  .content-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .panel-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(0,47,167,0.08);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .panel-icon svg { width: 22px; height: 22px; }
+  .panel-title { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+  .panel-desc { font-size: 13px; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
+  .panel-body { padding: 28px; }
+
+  /* FORM ELEMENTS */
+  .form-section { margin-bottom: 28px; }
+  .form-section:last-child { margin-bottom: 0; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue-accent);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,47,167,0.12);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .form-row.full { grid-template-columns: 1fr; }
+  .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dark);
+    letter-spacing: 0.02em;
+  }
+  .field input, .field select, .field textarea {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--blue-accent);
+    box-shadow: 0 0 0 3px rgba(0,47,167,0.10);
+  }
+  .field textarea { resize: vertical; min-height: 80px; }
+  .field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235a5a7a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+  .hint { font-size: 11px; color: var(--text-light); font-weight: 500; margin-top: 2px; }
+
+  /* TOGGLE CHIPS */
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--blue-accent); color: var(--blue-accent); }
+  .chip.selected { background: var(--blue-accent); border-color: var(--blue-accent); color: white; }
+  .chip.selected-bright { background: var(--blue-bright); border-color: var(--blue-bright); color: white; }
+
+  /* SCENARIO CARDS */
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .scenario-card {
+    padding: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    position: relative;
+  }
+  .scenario-card:hover { border-color: var(--blue-accent); box-shadow: 0 2px 12px rgba(0,47,167,0.10); }
+  .scenario-card.selected { border-color: var(--blue-accent); background: rgba(0,47,167,0.04); }
+  .scenario-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    background: var(--blue-accent);
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 20px;
+    text-align: center;
+  }
+  .scenario-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(0,47,167,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .scenario-icon svg { width: 18px; height: 18px; }
+  .scenario-name { font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+  .scenario-desc { font-size: 11px; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
+
+  /* DATA UPLOAD */
+  .upload-zone {
+    border: 2px dashed rgba(0,47,167,0.25);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(0,47,167,0.02);
+  }
+  .upload-zone:hover { border-color: var(--blue-accent); background: rgba(0,47,167,0.05); }
+  .upload-zone.dragging { border-color: var(--blue-bright); background: rgba(0,85,255,0.08); }
+  .upload-icon { margin-bottom: 12px; opacity: 0.5; }
+  .upload-title { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+  .upload-sub { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .upload-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 16px;
+    border: 1.5px solid var(--blue-accent);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue-accent);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .upload-btn:hover { background: var(--blue-accent); color: white; }
+
+  .file-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .file-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+  .file-name { font-size: 13px; font-weight: 600; color: var(--text-dark); flex: 1; }
+  .file-size { font-size: 11px; color: var(--text-light); font-weight: 500; }
+  .file-status {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: rgba(0,135,90,0.1);
+    color: var(--success);
+  }
+
+  /* ALERT */
+  .alert {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .alert-info { background: rgba(0,47,167,0.07); border: 1px solid rgba(0,47,167,0.15); color: var(--blue-accent); }
+  .alert-warn { background: rgba(180,83,9,0.07); border: 1px solid rgba(180,83,9,0.15); color: var(--warning); }
+  .alert svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* CHECKLIST STEP */
+  .check-group { display: flex; flex-direction: column; gap: 10px; }
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+  }
+  .check-row:hover { border-color: var(--blue-accent); }
+  .check-row.checked { border-color: rgba(0,135,90,0.35); background: rgba(0,135,90,0.03); }
+  .cr-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: white;
+    margin-top: 1px;
+  }
+  .check-row.checked .cr-box { background: var(--success); border-color: var(--success); }
+  .cr-check { display: none; color: white; }
+  .check-row.checked .cr-check { display: block; }
+  .cr-content { flex: 1; }
+  .cr-title { font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+  .cr-desc { font-size: 12px; color: var(--text-muted); font-weight: 500; line-height: 1.4; }
+  .cr-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .tag-req { background: rgba(0,47,167,0.08); color: var(--blue-accent); }
+  .tag-opt { background: rgba(18,18,57,0.06); color: var(--text-muted); }
+
+  /* BUTTONS */
+  .panel-footer {
+    padding: 20px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary { background: var(--blue-accent); color: white; }
+  .btn-primary:hover { background: #001f80; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,47,167,0.35); }
+  .btn-secondary { background: white; color: var(--text-dark); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--blue-accent); color: var(--blue-accent); }
+  .btn-bright { background: var(--blue-bright); color: white; }
+  .btn-bright:hover { background: #0044cc; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,85,255,0.35); }
+  .btn-ghost { background: transparent; color: var(--text-muted); }
+  .btn-ghost:hover { color: var(--text-dark); }
+  .btn svg { width: 16px; height: 16px; }
+  .btn:disabled { opacity: 0.45; pointer-events: none; }
+
+  /* SUCCESS PAGE */
+  .success-wrap {
+    text-align: center;
+    padding: 48px 28px;
+  }
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(0,135,90,0.10);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .success-title { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; }
+  .success-desc { font-size: 14px; color: var(--text-muted); font-weight: 500; line-height: 1.6; max-width: 420px; margin: 0 auto 28px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; text-align: left; }
+  .summary-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .summary-val { font-size: 20px; font-weight: 800; color: var(--blue-accent); margin-bottom: 2px; }
+  .summary-key { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* notification pulse */
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(0,85,255,0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(0,85,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,85,255,0); }
+  }
+  .pulse { animation: pulse-ring 2s infinite; }
+
+  @media (max-width: 820px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .form-row.three { grid-template-columns: 1fr 1fr; }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .progress-steps .step-label { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-area">
+      <img class="koncrit-logo-img" src="Снимок экрана_25-6-2026_132319_.jpeg" alt="KONCRIT YMS">
+    </div>
+    <div class="header-right">
+      <span class="badge-project">Мастер настройки системы</span>
+      <button class="btn btn-secondary" id="btn-reset" onclick="resetAll()" style="padding:7px 14px;font-size:12px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Сбросить
+      </button>
+    </div>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-wrapper">
+    <div class="progress-steps" id="progress-steps"></div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-grid">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Чек-лист конфигурации</div>
+      <div id="checklist-items"></div>
+      <div class="sidebar-divider"></div>
+      <div class="readiness-label">Готовность системы</div>
+      <div class="readiness-score" id="readiness-score">0%</div>
+      <div class="readiness-track">
+        <div class="readiness-fill" id="readiness-fill" style="width:0%"></div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content-panel">
+
+      <!-- PAGE 1: PROJECT -->
+      <div class="page active" id="page-0">
+        <div class="panel-header">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div>
+            <div class="panel-title">Параметры проекта</div>
+            <div class="panel-desc">Базовая информация о проекте и конфигурация системы KONCRIT</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="alert alert-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Заполните все обязательные поля для корректной инициализации проекта в системе.
+          </div>
+          <div class="form-section">
+            <div class="section-label">Основные данные</div>
+            <div class="form-row">
+              <div class="field">
+                <label>Название проекта *</label>
+                <input type="text" id="f-name" placeholder="Строительство ЖК «Бетон»" oninput="updateChecklist()"/>
+              </div>
+              <div class="field">
+                <label>Код проекта *</label>
+                <input type="text" id="f-code" placeholder="PRJ-2024-001" oninput="updateChecklist()"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Тип объекта *</label>
+                <select id="f-type" onchange="updateChecklist()">
+                  <option value="">— Выберите тип —</option>
+                  <option>Жилой комплекс</option>
+                  <option>Коммерческая недвижимость</option>
+                  <option>Промышленный объект</option>
+                  <option>Инфраструктура</option>
+                  <option>Реставрация</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Регион</label>
+                <select>
+                  <option>Москва</option>
+                  <option>Санкт-Петербург</option>
+                  <option>Новосибирск</option>
+                  <option>Екатеринбург</option>
+                  <option>Другой регион</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row three">
+              <div class="field">
+                <label>Дата старта</label>
+                <input type="date" id="f-start"/>
+              </div>
+              <div class="field">
+                <label>Плановый срок</label>
+                <input type="date"/>
+              </div>
+              <div class="field">
+                <label>Бюджет (₽ млн)</label>
+                <input type="number" placeholder="0.00"/>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-label">Команда и роли</div>
+            <div class="form-row">
+              <div class="field">
+                <label>Руководитель проекта</label>
+                <input type="text" placeholder="Фамилия Имя Отчество"/>
+              </div>
+              <div class="field">
+                <label>Технический директор</label>
+                <input type="text" placeholder="Фамилия Имя Отчество"/>
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="field">
+                <label>Описание проекта</label>
+                <textarea placeholder="Краткое описание объекта, цели и задачи..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-label">Модули системы</div>
+            <div class="chip-group" id="modules-chips">
+              <div class="chip selected" onclick="toggleChip(this)">Смета и затраты</div>
+              <div class="chip selected" onclick="toggleChip(this)">Планирование графика</div>
+              <div class="chip" onclick="toggleChip(this)">Управление поставками</div>
+              <div class="chip" onclick="toggleChip(this)">Контроль качества</div>
+              <div class="chip" onclick="toggleChip(this)">BIM-интеграция</div>
+              <div class="chip" onclick="toggleChip(this)">Отчётность</div>
+              <div class="chip" onclick="toggleChip(this)">Мобильные бригады</div>
+              <div class="chip" onclick="toggleChip(this)">API-интеграции</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <span style="font-size:12px;color:var(--text-light);font-weight:500;">Шаг 1 из 6</span>
+          <button class="btn btn-primary" onclick="goPage(1)">
+            Далее — Основные справочники
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 2: SCENARIOS -->
+      <div class="page" id="page-1">
+        <div class="panel-header">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div>
+            <div class="panel-title">Настройка сценариев</div>
+            <div class="panel-desc">Выберите рабочие сценарии для автоматизации процессов на объекте</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="alert alert-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Можно выбрать несколько сценариев. Каждый сценарий активирует соответствующие модули и шаблоны.
+          </div>
+          <div class="scenario-grid" id="scenario-grid">
+            <div class="scenario-card selected" onclick="toggleScenario(this)">
+              <div class="scenario-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </div>
+              <div class="scenario-name">Типовое строительство</div>
+              <div class="scenario-desc">Стандартный процесс для жилых и коммерческих объектов. Включает все базовые этапы.</div>
+            </div>
+            <div class="scenario-card" onclick="toggleScenario(this)">
+              <div class="scenario-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div class="scenario-name">Реконструкция</div>
+              <div class="scenario-desc">Для объектов реконструкции и капитального ремонта с сохранением существующих структур.</div>
+            </div>
+            <div class="scenario-card" onclick="toggleScenario(this)">
+              <div class="scenario-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              </div>
+              <div class="scenario-name">Быстровозводимые</div>
+              <div class="scenario-desc">Оптимизировано для сжатых сроков. Параллельное выполнение этапов и ускоренный контроль.</div>
+            </div>
+            <div class="scenario-card" onclick="toggleScenario(this)">
+              <div class="scenario-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div class="scenario-name">Государственный заказ</div>
+              <div class="scenario-desc">Расширенная отчётность для госконтрактов. Интеграция с реестрами ФАС и казначейством.</div>
+            </div>
+            <div class="scenario-card" onclick="toggleScenario(this)">
+              <div class="scenario-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/></svg>
+              </div>
+              <div class="scenario-name">Промышленный объект</div>
+              <div class="scenario-desc">Специальные требования по безопасности, инженерным системам и промышленным стандартам.</div>
+            </div>
+            <div class="scenario-card" onclick="toggleScenario(this)">
+              <div class="scenario-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div class="scenario-name">Мониторинг и ТО</div>
+              <div class="scenario-desc">Режим эксплуатации — планирование ТО, регистрация инцидентов и управление ресурсами.</div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;">
+            <div class="section-label">Параметры уведомлений</div>
+            <div class="form-row">
+              <div class="field">
+                <label>Метод оповещений</label>
+                <select>
+                  <option>Email + Push</option>
+                  <option>Только Email</option>
+                  <option>Telegram-бот</option>
+                  <option>SMS + Email</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Частота сводных отчётов</label>
+                <select>
+                  <option>Ежедневно в 08:00</option>
+                  <option>Еженедельно (пн)</option>
+                  <option>Только по событиям</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <button class="btn btn-secondary" onclick="goPage(0)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Назад
+          </button>
+          <button class="btn btn-primary" onclick="goPage(2)">
+            Далее — Параметры двора
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 3: DATA -->
+      <div class="page" id="page-2">
+        <div class="panel-header">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <div>
+            <div class="panel-title">Загрузка данных</div>
+            <div class="panel-desc">Импорт начальных данных проекта: сметы, чертежи, спецификации, нормативы</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="alert alert-warn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Поддерживаемые форматы: .xlsx, .csv, .pdf, .ifc, .dwg. Максимум 50 МБ на файл.
+          </div>
+
+          <div class="form-section">
+            <div class="section-label">Загрузка файлов</div>
+            <div class="upload-zone" id="drop-zone"
+              ondragover="event.preventDefault();this.classList.add('dragging')"
+              ondragleave="this.classList.remove('dragging')"
+              ondrop="handleDrop(event)">
+              <div class="upload-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="upload-title">Перетащите файлы сюда</div>
+              <div class="upload-sub">или нажмите кнопку для выбора</div>
+              <button class="upload-btn" onclick="simulateUpload()">Выбрать файлы</button>
+            </div>
+            <div class="file-list" id="file-list"></div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-label">Источники данных</div>
+            <div class="form-row">
+              <div class="field">
+                <label>Интеграция с ERP</label>
+                <select>
+                  <option>— Не используется —</option>
+                  <option>1С:Строительство</option>
+                  <option>SAP S/4HANA</option>
+                  <option>Microsoft Dynamics</option>
+                  <option>Другая система</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Синхронизация</label>
+                <select>
+                  <option>Вручную (по кнопке)</option>
+                  <option>Каждые 15 минут</option>
+                  <option>Каждый час</option>
+                  <option>Раз в сутки</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="field">
+                <label>Строка подключения к API</label>
+                <input type="text" placeholder="https://erp.company.ru/api/v2/..." style="font-family:monospace;font-size:12px;"/>
+                <div class="hint">Оставьте пустым, если интеграция не нужна</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-label">Начальный импорт</div>
+            <div class="chip-group">
+              <div class="chip selected" onclick="toggleChip(this)">Нормативная база</div>
+              <div class="chip selected" onclick="toggleChip(this)">Каталог материалов</div>
+              <div class="chip" onclick="toggleChip(this)">Тарифные ставки</div>
+              <div class="chip" onclick="toggleChip(this)">Шаблоны смет</div>
+              <div class="chip" onclick="toggleChip(this)">Типовые работы</div>
+              <div class="chip" onclick="toggleChip(this)">База подрядчиков</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <button class="btn btn-secondary" onclick="goPage(1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Назад
+          </button>
+          <button class="btn btn-primary" onclick="goPage(3)">
+            Далее — Ячейки
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 4: CHECKLIST -->
+      <div class="page" id="page-3">
+        <div class="panel-header">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <div>
+            <div class="panel-title">Чек-лист конфигурации</div>
+            <div class="panel-desc">Пройдите по всем пунктам перед запуском системы в эксплуатацию</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="check-group" id="config-checklist">
+            <div class="check-row checked" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Параметры проекта заполнены</div>
+                <div class="cr-desc">Название, код, тип объекта, даты и команда</div>
+              </div>
+              <span class="cr-tag tag-req">Обязательно</span>
+            </div>
+            <div class="check-row checked" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Сценарии настроены</div>
+                <div class="cr-desc">Выбран хотя бы один рабочий сценарий</div>
+              </div>
+              <span class="cr-tag tag-req">Обязательно</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Права доступа распределены</div>
+                <div class="cr-desc">Роли участников настроены в системе управления пользователями</div>
+              </div>
+              <span class="cr-tag tag-req">Обязательно</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Нормативная база загружена</div>
+                <div class="cr-desc">ФЕР, ТЕР или региональные расценки импортированы</div>
+              </div>
+              <span class="cr-tag tag-req">Обязательно</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Тестовый запуск выполнен</div>
+                <div class="cr-desc">Проверены основные сценарии в тестовой среде</div>
+              </div>
+              <span class="cr-tag tag-req">Обязательно</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Интеграция с ERP проверена</div>
+                <div class="cr-desc">Тестовый обмен данными прошёл без ошибок</div>
+              </div>
+              <span class="cr-tag tag-opt">Опционально</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Резервное копирование настроено</div>
+                <div class="cr-desc">Ежедневный бэкап в облачное хранилище активирован</div>
+              </div>
+              <span class="cr-tag tag-opt">Опционально</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="cr-box"><svg class="cr-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Команда обучена</div>
+                <div class="cr-desc">Все участники прошли вводный инструктаж по системе</div>
+              </div>
+              <span class="cr-tag tag-opt">Опционально</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <button class="btn btn-secondary" onclick="goPage(2)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Назад
+          </button>
+          <button class="btn btn-primary" onclick="goPage(4)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+            Далее — Обработка рейса
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 5: TRIP PROCESSING -->
+      <div class="page" id="page-4">
+        <div class="panel-header">
+          <div class="panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#002fa7" stroke-width="2"><path d="M10 17H5V5h9v12h-4Z"/><path d="M14 8h4l3 4v5h-3"/><circle cx="7" cy="17" r="2"/><circle cx="18" cy="17" r="2"/></svg>
+          </div>
+          <div>
+            <div class="panel-title">Обработка рейса</div>
+            <div class="panel-desc">Настройте базовый сценарий движения транспорта от прибытия до выезда</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="alert alert-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Эти настройки определяют, какие контрольные точки мастер создаст для обработки рейса.
+          </div>
+          <div class="check-group">
+            <div class="check-row checked">
+              <div class="cr-box"><svg class="cr-check" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 3"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Прибытие на КПП</div>
+                <div class="cr-desc">Регистрация рейса, проверка транспорта, водителя и документов</div>
+              </div>
+              <span class="cr-tag tag-req">Важно</span>
+            </div>
+            <div class="check-row checked">
+              <div class="cr-box"><svg class="cr-check" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 3"/></svg></div>
+              <div class="cr-content">
+                <div class="cr-title">Назначение ячейки или дока</div>
+                <div class="cr-desc">Автоматическое или ручное назначение места обслуживания</div>
+              </div>
+              <span class="cr-tag tag-req">Важно</span>
+            </div>
+            <div class="check-row">
+              <div class="cr-box"></div>
+              <div class="cr-content">
+                <div class="cr-title">Завершение и выезд</div>
+                <div class="cr-desc">Фиксация окончания работ, освобождение ресурса и закрытие рейса</div>
+              </div>
+              <span class="cr-tag tag-opt">Опционально</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <button class="btn btn-secondary" onclick="goPage(3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Назад
+          </button>
+          <button class="btn btn-bright pulse" onclick="goPage(5)" id="btn-launch">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+            Запустить систему
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 6: SUCCESS -->
+      <div class="page" id="page-5">
+        <div class="success-wrap">
+          <div class="success-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00875a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="success-title">Система готова к работе!</div>
+          <div class="success-desc">Проект успешно настроен и инициализирован в KONCRIT. Все параметры сохранены, сценарии активированы.</div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="summary-val" id="sum-modules">6</div>
+              <div class="summary-key">Модулей активировано</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-val" id="sum-scenarios">2</div>
+              <div class="summary-key">Сценариев настроено</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-val" id="sum-checks">5/8</div>
+              <div class="summary-key">Пунктов чек-листа</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="alert('Открываем дашборд проекта...')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Перейти в проект
+            </button>
+            <button class="btn btn-secondary" onclick="alert('Отчёт о конфигурации будет скачан...')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Скачать отчёт
+            </button>
+            <button class="btn btn-ghost" onclick="resetAll()">Создать новый проект</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const STEPS = [
+  { label: 'Системные справочники', icon: '1' },
+  { label: 'Основные справочники', icon: '2' },
+  { label: 'Параметры двора и расписание', icon: '3' },
+  { label: 'Ячейки&nbsp;двора<br>и&nbsp;склада', icon: '4' },
+  { label: 'Обработка рейса', icon: '5' },
+  { label: 'Готово', icon: '6' }
+];
+
+const CHECKLIST = [
+  { label: 'Параметры проекта', done: false },
+  { label: 'Сценарии', done: false },
+  { label: 'Загрузка данных', done: false },
+  { label: 'Права доступа', done: false },
+  { label: 'Тестовый запуск', done: false },
+];
+
+let currentPage = 0;
+let sideChecklist = [false, false, false, false, false, false];
+
+const MOCK_FILES = [
+  { name: 'smeta_2024.xlsx', size: '2.3 МБ' },
+  { name: 'chertezhi_v2.pdf', size: '14.7 МБ' },
+  { name: 'normativy_FER.csv', size: '0.8 МБ' },
+];
+
+function renderProgress() {
+  const stepsEl = document.getElementById('progress-steps');
+  stepsEl.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'step-item' + (i === currentPage ? ' active' : '') + (i < currentPage ? ' completed' : '');
+    div.innerHTML = `<div class="step-dot">${i < currentPage ? '✓' : s.icon}</div><span class="step-label">${s.label}</span>`;
+    div.onclick = () => { if (i <= currentPage) goPage(i); };
+    stepsEl.appendChild(div);
+    if (i < STEPS.length - 1) {
+      const connector = document.createElement('div');
+      connector.style.cssText = 'flex:1;height:2px;background:'+(i<currentPage?'var(--blue-accent)':'var(--border)')+';margin:0 4px;transition:background 0.3s;';
+      stepsEl.appendChild(connector);
+    }
+  });
+  const pct = (currentPage / (STEPS.length - 1)) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function renderSideChecklist() {
+  const el = document.getElementById('checklist-items');
+  el.innerHTML = '';
+  const labels = ['Системные справочники', 'Основные справочники', 'Параметры двора', 'Ячейки двора и склада', 'Обработка рейса', 'Запуск выполнен'];
+  labels.forEach((l, i) => {
+    const div = document.createElement('div');
+    const done = sideChecklist[i];
+    div.className = 'checklist-item' + (i === currentPage ? ' active' : '') + (done ? ' done' : '');
+    div.innerHTML = `<div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 3"/></svg></div><span class="chk-label">${l}</span>`;
+    el.appendChild(div);
+  });
+  const done = sideChecklist.filter(Boolean).length;
+  const pct = Math.round((done / sideChecklist.length) * 100);
+  document.getElementById('readiness-score').textContent = pct + '%';
+  document.getElementById('readiness-fill').style.width = pct + '%';
+}
+
+function goPage(n) {
+  if (n > 0) sideChecklist[n - 1] = true;
+  document.getElementById('page-' + currentPage).classList.remove('active');
+  currentPage = n;
+  document.getElementById('page-' + n).classList.add('active');
+  if (n === 5) {
+    sideChecklist[5] = true;
+    updateSummary();
+  }
+  renderProgress();
+  renderSideChecklist();
+}
+
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+function toggleScenario(el) {
+  el.classList.toggle('selected');
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+function updateChecklist() {
+  const name = document.getElementById('f-name').value;
+  const code = document.getElementById('f-code').value;
+  const type = document.getElementById('f-type').value;
+  if (name && code && type) sideChecklist[0] = true;
+  renderSideChecklist();
+}
+
+function simulateUpload() {
+  const list = document.getElementById('file-list');
+  list.innerHTML = '';
+  MOCK_FILES.forEach((f, i) => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'file-item';
+      div.innerHTML = `<div class="file-dot"></div><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><span class="file-status">Загружен</span>`;
+      list.appendChild(div);
+    }, i * 400);
+  });
+  setTimeout(() => { sideChecklist[2] = true; renderSideChecklist(); }, 1400);
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('dragging');
+  simulateUpload();
+}
+
+function updateSummary() {
+  const mods = document.querySelectorAll('#modules-chips .chip.selected').length;
+  const scen = document.querySelectorAll('#scenario-grid .scenario-card.selected').length;
+  const checks = document.querySelectorAll('#config-checklist .check-row.checked').length;
+  const total = document.querySelectorAll('#config-checklist .check-row').length;
+  document.getElementById('sum-modules').textContent = mods;
+  document.getElementById('sum-scenarios').textContent = scen;
+  document.getElementById('sum-checks').textContent = checks + '/' + total;
+}
+
+function resetAll() {
+  sideChecklist = [false, false, false, false, false, false];
+  document.getElementById('page-' + currentPage).classList.remove('active');
+  currentPage = 0;
+  document.getElementById('page-0').classList.add('active');
+  document.getElementById('file-list').innerHTML = '';
+  renderProgress();
+  renderSideChecklist();
+}
+
+renderProgress();
+renderSideChecklist();
+</script>
+</body>
+</html>
