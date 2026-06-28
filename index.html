@@ -682,8 +682,10 @@
   <div class="main-grid">
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="sidebar-title">Чек-лист конфигурации</div>
-      <div id="checklist-items"></div>
+      <div id="checklist-section">
+        <div class="sidebar-title">Чек-лист конфигурации</div>
+        <div id="checklist-items"></div>
+      </div>
       <div class="sidebar-divider"></div>
       <div class="readiness-label">Готовность системы</div>
       <div class="readiness-score" id="readiness-score">0%</div>
@@ -1211,22 +1213,24 @@ const checklistByStep = [
     { label: 'Склады и дворы', done: false }
   ],
   [
-    { label: 'Параметры двора', done: false },
-    { label: 'Рабочее расписание', done: false },
-    { label: 'Правила таймслотов', done: false },
-    { label: 'Ограничения по въезду', done: false }
+    { label: 'Расписание работы', done: false },
+    { label: 'Движение по маршруту', done: false },
+    { label: 'Временные интервалы', done: false },
+    { label: 'Регистрация и въезд', done: false },
+    { label: 'Планирование таймслотов', done: false },
+    { label: 'Планирование рейса', done: false },
+    { label: 'Нормативы обработки', done: false }
   ],
   [
-    { label: 'Ячейки двора', done: false },
+    { label: 'Шаблоны ячеек', done: false },
     { label: 'Ячейки склада', done: false },
-    { label: 'Доки', done: false },
-    { label: 'Зоны ожидания', done: false }
+    { label: 'Ячейки двора', done: false },
+    { label: 'Диапазоны ячеек двора', done: false }
   ],
   [
-    { label: 'Прибытие на КПП', done: false },
-    { label: 'Назначение дока', done: false },
-    { label: 'Обработка отклонений', done: false },
-    { label: 'Выезд', done: false }
+    { label: 'Правила перемещения ТС', done: false },
+    { label: 'Коды обработки', done: false },
+    { label: 'Поток статусов', done: false }
   ],
   [
     { label: 'Проверка конфигурации', done: false },
@@ -1261,6 +1265,11 @@ function renderProgress() {
 
 function renderSideChecklist() {
   const el = document.getElementById('checklist-items');
+  const section = document.getElementById('checklist-section');
+  const divider = document.querySelector('.sidebar-divider');
+  const isFinalStep = currentPage === STEPS.length - 1;
+  section.style.display = isFinalStep ? 'none' : '';
+  divider.style.display = isFinalStep ? 'none' : '';
   el.innerHTML = '';
   const items = checklistByStep[currentPage] || [];
   items.forEach((item, i) => {
